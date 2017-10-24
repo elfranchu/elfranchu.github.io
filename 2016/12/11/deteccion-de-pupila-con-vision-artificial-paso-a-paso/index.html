@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="pingback" href="/xmlrpc.php" />
+  <title>Detección de pupila con visión artificial paso a paso. &#8211; Programando</title>
+  <!-- Jetpack Site Verification Tags -->
+  <link rel='dns-prefetch' href='//s0.wp.com' />
+  <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+  <link rel='dns-prefetch' href='//s.w.org' />
+  <link rel="alternate" type="application/rss+xml" title="Programando &raquo; Feed" href="/feed/" />
+  <link rel="alternate" type="application/rss+xml" title="Programando &raquo; RSS de los comentarios" href="/comments/feed/"
+  />
+  <link rel="alternate" type="application/rss+xml" title="Programando &raquo; Detección de pupila con visión artificial paso a paso. RSS de los comentarios"
+    href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/feed/" />
+  <script type="text/javascript">
+    window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "http:\/\/programando.com.es\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.6" } };
+    !function (a, b, c) { function d(a) { var b, c, d, e, f = String.fromCharCode; if (!k || !k.fillText) return !1; switch (k.clearRect(0, 0, j.width, j.height), k.textBaseline = "top", k.font = "600 32px Arial", a) { case "flag": return k.fillText(f(55356, 56826, 55356, 56819), 0, 0), !(j.toDataURL().length < 3e3) && (k.clearRect(0, 0, j.width, j.height), k.fillText(f(55356, 57331, 65039, 8205, 55356, 57096), 0, 0), b = j.toDataURL(), k.clearRect(0, 0, j.width, j.height), k.fillText(f(55356, 57331, 55356, 57096), 0, 0), c = j.toDataURL(), b !== c); case "emoji4": return k.fillText(f(55357, 56425, 55356, 57341, 8205, 55357, 56507), 0, 0), d = j.toDataURL(), k.clearRect(0, 0, j.width, j.height), k.fillText(f(55357, 56425, 55356, 57341, 55357, 56507), 0, 0), e = j.toDataURL(), d !== e }return !1 } function e(a) { var c = b.createElement("script"); c.src = a, c.defer = c.type = "text/javascript", b.getElementsByTagName("head")[0].appendChild(c) } var f, g, h, i, j = b.createElement("canvas"), k = j.getContext && j.getContext("2d"); for (i = Array("flag", "emoji4"), c.supports = { everything: !0, everythingExceptFlag: !0 }, h = 0; h < i.length; h++)c.supports[i[h]] = d(i[h]), c.supports.everything = c.supports.everything && c.supports[i[h]], "flag" !== i[h] && (c.supports.everythingExceptFlag = c.supports.everythingExceptFlag && c.supports[i[h]]); c.supports.everythingExceptFlag = c.supports.everythingExceptFlag && !c.supports.flag, c.DOMReady = !1, c.readyCallback = function () { c.DOMReady = !0 }, c.supports.everything || (g = function () { c.readyCallback() }, b.addEventListener ? (b.addEventListener("DOMContentLoaded", g, !1), a.addEventListener("load", g, !1)) : (a.attachEvent("onload", g), b.attachEvent("onreadystatechange", function () { "complete" === b.readyState && c.readyCallback() })), f = c.source || {}, f.concatemoji ? e(f.concatemoji) : f.wpemoji && f.twemoji && (e(f.twemoji), e(f.wpemoji))) }(window, document, window._wpemojiSettings);
+  </script>
+  <style type="text/css">
+  
+    img.wp-smiley,
+    img.emoji {
+      display: inline !important;
+      border: none !important;
+      box-shadow: none !important;
+      height: 1em !important;
+      width: 1em !important;
+      margin: 0 .07em !important;
+      vertical-align: -0.1em !important;
+      background: none !important;
+      padding: 0 !important;
+    }
+  </style>
+  <link rel='stylesheet' id='v12_google_font-css' href='https://fonts.googleapis.com/css?family=Raleway%3A400%2C700&#038;ver=1.1.0'
+    type='text/css' media='screen' />
+  <link rel='stylesheet' id='bootstrap-css' href='/wp-content/themes/v12/lib/bootstrap/css/bootstrap.min.css?ver=1.1.0' type='text/css'
+    media='screen' />
+  <link rel='stylesheet' id='v12_style-css' href='/wp-content/themes/v12/style.css?ver=1.1.0' type='text/css' media='screen'
+  />
+  <link rel='stylesheet' id='v12_style_single-css' href='/wp-content/themes/v12/css/single.css?ver=1.1.0' type='text/css' media='screen'
+  />
+  <link rel='stylesheet' id='v12_style_page-css' href='/wp-content/themes/v12/css/page.css?ver=1.1.0' type='text/css' media='screen'
+  />
+  <link rel='stylesheet' id='social-logos-css' href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=1'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='jetpack_css-css' href='/wp-content/plugins/jetpack/css/jetpack.css?ver=4.4.2' type='text/css'
+    media='all' />
+  <script type='text/javascript' src='/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+  <script type='text/javascript' src='/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+  <script type='text/javascript'>
+      /* <![CDATA[ */
+      var related_posts_js_options = { "post_heading": "h4" };
+/* ]]> */
+
+  </script>
+  <script type='text/javascript' src='/wp-content/plugins/jetpack/modules/related-posts/related-posts.js?ver=20150408'></script>
+  <!--[if lt IE 9]>
+<script type='text/javascript' src='http://programando.com.es/wp-content/themes/v12/lib/html5shiv/html5shiv.min.js?ver=1.1.0'></script>
+<![endif]-->
+  <!--[if lt IE 9]>
+<script type='text/javascript' src='http://programando.com.es/wp-content/themes/v12/lib/respond/respond.min.js?ver=1.1.0'></script>
+<![endif]-->
+  <link rel='https://api.w.org/' href='/wp-json/' />
+  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd" />
+  <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml" />
+  <link rel='next' title='Os presento PhotoDream' href='/2016/12/11/os-presento-photodream/' />
+  <meta name="generator" content="WordPress 4.7.6" />
+  <link rel="canonical" href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/" />
+  <link rel='shortlink' href='http://wp.me/p8cg9i-4' />
+  <link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=http%3A%2F%2F%2F2016%2F12%2F11%2Fdeteccion-de-pupila-con-vision-artificial-paso-a-paso%2F"
+  />
+  <link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=http%3A%2F%2F%2F2016%2F12%2F11%2Fdeteccion-de-pupila-con-vision-artificial-paso-a-paso%2F&#038;format=xml"
+  />
+   <link rel='dns-prefetch' href='//v0.wordpress.com'>
+  <link rel='dns-prefetch' href='//i0.wp.com'>
+  <link rel='dns-prefetch' href='//i1.wp.com'>
+  <link rel='dns-prefetch' href='//i2.wp.com'>
+  <style type='text/css'>
+    img#wpstats {
+      display: none
+    }
+  </style>
+  <style type="text/css">
+    .recentcomments a {
+      display: inline !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    } 
+  .sharedaddy{
+    display: none;
+    
+  }
+  .comments-area{
+    display: none;
+    
+  }
+  
+  </style>
+  <meta name="title" content="Detección de pupila con visión artificial paso a paso. | Programando" />
+  <meta name="description" content="Breve introducción a la librería OpenCV Introducción Tras haber aplicado uno de los múltiples algoritmos de detección facial y de detección de ojos que se pueden encontrar realizando una búsqueda en google, vamos a intentar detectar la pupila ocular con la foto de un ojo utilizando la librería de visión artificial OpenCV y Visual Studio.&hellip;"
+  />
+
+  <!-- Jetpack Open Graph Tags -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Detección de pupila con visión artificial paso a paso." />
+  <meta property="og:url" content="http://programando.com.es/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/"
+  />
+  <meta property="og:description" content="Breve introducción a la librería OpenCV Introducción Tras haber aplicado uno de los múltiples algoritmos de detección facial y de detección de ojos que se pueden encontrar realizando una búsqueda e…"
+  />
+  <meta property="article:published_time" content="2016-12-11T16:03:48+00:00" />
+  <meta property="article:modified_time" content="2016-12-11T16:03:48+00:00" />
+  <meta property="og:site_name" content="Programando" />
+  <meta property="og:image" content="http://crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/resultado.jpg" />
+  <meta property="og:locale" content="es_ES" />
+  <meta name="twitter:card" content="summary" />
+  <meta data-pso-pv="1.2.1" data-pso-pt="singlePost" data-pso-th="8376f4359ecbb1804b60d7542fd3d17a">
+  
+</head>
+
+<body class="post-template-default single single-post postid-4 single-format-standard">
+  <nav class="navbar navbar-default v12-header">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+        <div class='site-logo'>
+          <a class="navbar-brand" href="/" title='Programando' rel='home'>Programando</a>
+        </div>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+  <div class="container" id="v12-main">
+    <div class="row">
+      <div class="col-md-9">
+        <article class="post-4 post type-post status-publish format-standard has-post-thumbnail hentry category-c tag-c tag-opencv tag-vision-artificial"
+          id="post-4">
+          <div class="featured-image">
+            <img width="259" height="194" src="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/11/resultado.jpg?fit=259%2C194"
+              class="attachment-v12_848 size-v12_848 wp-post-image" alt="" /> </div>
+          <div class="wrapper clearfix">
+            <p class="meta">
+              <span>11 diciembre, 2016</span> /
+              <span>by <a href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/fjmenendez">fjmenendez</a></span>              /
+              <span><a href="/category/c/" rel="category tag">C++</a></span> /
+              <span>No Comments</span>
+            </p>
+            <h1 class="title">Detección de pupila con visión artificial paso a paso.</h1>
+            <div class="content">
+              <p>Breve introducción a la librería OpenCV</p>
+              <h3>Introducción</h3>
+              <div class="blogtext">
+                <p>Tras haber aplicado uno de los múltiples algoritmos de detección facial y de detección de ojos que se pueden
+                  encontrar realizando una búsqueda en google, vamos a intentar detectar la pupila ocular con la foto de
+                  un ojo utilizando la librería de visión artificial OpenCV y Visual Studio.</p>
+                <p><a href="http://opencv.org/">OpenCV, </a> <a href="http://es.wikipedia.org/wiki/OpenCV">http://es.wikipedia.org/wiki/OpenCV</a>
+                  es probablemente la más potente librería de visión artificial. Originalmente desarrollada por Intel y liberada
+                  después como software libre bajo licencia GPL, ha evolucionado hasta convertirse en la base de la mayor
+                  parte de las aplicaciones de detección de movimiento, reconocimiento facial, detección de objectos, LPR
+                  (reconocimiento de matrículas), ..</p>
+                <table border="0" cellspacing="1" cellpadding="1">
+                  <tbody>
+                    <tr>
+                      <td><img src="https://i1.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/imagen.jpg?w=848"
+                          alt="" data-recalc-dims="1" /></td>
+                      <td>
+                        <h3><img src="https://i0.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/flechade.jpg?w=848"
+                            alt="" data-recalc-dims="1" /></h3>
+                      </td>
+                      <td>
+                        <h3><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/resultado.jpg?w=848"
+                            alt="" data-recalc-dims="1" /></h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p>Podéis descargar el código fuente de este ejemplo <a href="http://crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/12/TestOpenCV.zip">aquí</a>                  o en <a href="https://github.com/elfranchu/deteccion-de-pupila-con-opencv">github</a></p>
+                <h3>Instalando Visual Studio C++ 2010 Express ® y OpenCV®</h3>
+                <p>Pues bien, para comenzar esta sencilla aplicación vamos a utilizar Visual Studio.</p>
+                <p>Si no lo hemos hecho ya, lo primero que debemos hacer es instalar  “Visual Studio C++ 2010” ®, en este caso,
+                  y dado que es un proyecto de evaluación hemos instalado la versión gratuita o  Express desde el siguiente
+                  enlace  <a href="http://www.visualstudio.com/es-es/downloads/download-visual-studio-vs#DownloadFamilies_2">http://www.visualstudio.com/es-es/downloads/download-visual-studio-vs#DownloadFamilies_2</a></p>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/descarga_visual1.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>He incluido las dlls y librerías de enlazado necesarias para este proyecto en el código fuente, pero no dudéis
+                  en instalar la versión completa.</p>
+                <p>Para  ello, necesitamos descargar la librería de visión artificial OpenCV <a href="http://docs.opencv.org/trunk/doc/tutorials/introduction/windows_visual_studio_Opencv/windows_visual_studio_Opencv.html#windows-visual-studio-how-to">http://docs.opencv.org/trunk/doc/tutorials/introduction/windows_visual_studio_Opencv/windows_visual_studio_Opencv.html#windows-visual-studio-how-to</a></p>
+                <p>Al ejecutar el archivo .exe de la descarga para Windows, se descomprimirán los archivos en la ruta deseada,
+                  hemos elegido la ruta “D:\Trabajo\OpenCV_Project\”</p>
+                <p>Podemos descargar el código fuente y los binarios, nosotros en concreto y dado que estamos trabajando con
+                  un Windows 7 de 64 bits, utilizaremos las dlls que se encuentran opencv\build\x64\vc10\bin.</p>
+                <h3>Creando el proyecto</h3>
+                <p>Tras abrir Visual Studio C++ 2010 Express, elegimos la opción “Crear nueva aplicación de consola de Win32”<br
+                  />
+                  <img src="https://i0.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/consola1.jpg?w=848" alt="" data-recalc-dims="1"
+                  /></p>
+                <p>Es importante, desmarcar la opción encabezado precompilado.</p>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/consola2.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>Debemos indicar donde se encuentran los archivos de encabezado .h, para ello, en las propiedades del proyecto
+                  indicamos “D:\Trabajo\OpenCV_Project\opencv\build\include” como directorio de inclusión adicional.</p>
+                <p><img src="https://i1.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/consola3.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>&nbsp;</p>
+                <p>Haremos lo mismo con las bibliotecas incluyendo la ruta “D:\Trabajo\OpenCV_Project\opencv\build\x86\vc10\lib”
+                  para resolver la dependencia de biblioteca.</p>
+                <p><img src="https://i1.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/consola4.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>Añadimos como entrada los archivos opencv_core247d.lib; opencv_imgproc247d.lib; opencv_highgui247d.lib;</p>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/consola5.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>Una vez echo esto, el siguiente código debería compilar</p>
+                <pre class="cscode"><code><span class="com">// TestOpenCV.cpp: define el punto de entrada de la aplicación de consola.</span>
+<span class="com">//</span>
+
+#include <span class="str">"stdafx.h"</span>
+
+#include &lt;opencv2/core/core.hpp&gt;
+#include &lt;opencv2/highgui/highgui.hpp&gt;
+#include &lt;opencv2/imgproc/imgproc.hpp&gt;
+#include &lt;iostream&gt;
+#include &lt;<span class="key">string</span>.h&gt;
+
+<span class="key">using</span> <span class="key">namespace</span> cv;
+ 
+
+<span class="key">int</span> main( <span class="key">int</span> argc, <span class="key">char</span>** argv )
+{
+    
+    <span class="key">return</span> 0;
+   
+}
+ </code></pre>
+                <h3>El algoritmo</h3>
+                <p><strong>Nuestro objetivo será detectar el borde de la pupila</strong>, es decir obtener un conjunto de puntos
+                  que representen ese borde.</p>
+                <p>Buscaremos rellenar un vector de puntos con el resultado adecuado.</p>
+                <p>Partiremos de una imagen en disco llamada <em>&#8220;imagen.jpg&#8221;</em> (nombre original verdad?)</p>
+                <p>El tipo que almacena una imagen en opencv  es &#8220;Mat&#8221;, este tipo de objeto contiene varios campos
+                  y métodos públicos bastante obvios de deducir dada su intuitiva nomenclatura iremos detallándolos  según
+                  los vayamos utilizando</p>
+                <p>Para cargar la imagen utilizamos la función &#8220;imread(nombre_fichero_a_cargar, tipo_rgb_gray_&#8230;)&#8221;</p>
+                <p>Lo primero que debemos hacer es cargar la imagen en memoria para poder tratarla y &#8220;jugar&#8221; con
+                  ella.</p>
+                <pre class="cscode"><code>
+ <span class="com">// imagen_color, contendrá la imagen original a tratar</span>
+    Mat imagen_color,copia_original;
+    Mat imagen_temporal_color;       
+    <span class="com">//Leemos el archivo </span>
+    imagen_color = imread(nombre_fichero_imagen, IMREAD_COLOR); 
+    copia_original= imagen_color.clone();
+</code></pre>
+                <p>&nbsp;</p>
+                <p><img src="https://i1.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/imagen.jpg?w=848" alt=""
+                    data-recalc-dims="1" /></p>
+                <p>Las funciones namedWindow e imshow nos permiten mostrar una imagen en pantalla, la primera declara la ventana
+                  donde mostrar la imagen decidiendo si el  tamaño de la ventana se puede modificar, la segunda carga la
+                  imagen en esa ventana</p>
+                <pre class="cscode"><code>    
+    <span class="com">//Creamos una ventana para mostrar la imagen original</span>
+    namedWindow( <span class="str">"Imagen Original"</span>,cv::WINDOW_NORMAL );
+    <span class="com">//Mostramos la imagen original</span>
+    imshow( <span class="str">"Imagen Original"</span>, imagen_color ); 
+	</code>
+</pre>
+                <p>Aplicaremos un filtro Gaussiano con el objetivo de difuminar la imagen  y eliminar posible ruido en los pixeles
+                  http://en.wikipedia.org/wiki/Gaussian_blur</p>
+                <pre class="cscode"><code>
+     <span class="com">//Difuminamos para quitar ruido</span>
+    GaussianBlur( imagen_color, imagen_color, Size( 3, 3 ), 0, 0 );
+</code>
+</pre>
+                <p>&nbsp;</p>
+                <p>Transformamos a escala de image_grises</p>
+                <p>&nbsp;</p>
+                <pre class="cscode"><code>
+      cv::cvtColor(imagen_color, image_gris, CV_BGR2GRAY);
+</code>
+</pre>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/image_gris.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>Aplicamos el umbral para transformar a blanco y negro. La imagen está en escala de grises, es decir, tiene
+                  un sólo canal</p>
+                <p>con valores de 0 a 255, aplicar un umbral será decir que los valores por debajo de un valor pasen a 0 y los
+                  valores por encima de ese valor pasen a blanco. Por lo tanto obtendremos una imagen binaria.</p>
+                <pre class="cscode"><code>
+   
+   
+    <span class="com">//Aplicamos el umbral para transformar a blanco y negro</span>
+    cv::threshold(image_gris,image_gris,0.4*sum(image_gris)[0]/(image_gris.cols*image_gris.rows),255,cv::THRESH_BINARY );
+    
+	</code>
+</pre>
+                <p><img src="https://i1.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/bw.jpg?w=848" alt=""
+                    data-recalc-dims="1" /></p>
+                <p>&nbsp;</p>
+                <p>Con las siguientes funciones que obtendremos un  pseudo-histograma horizontal y vertical para detectar la
+                  posición del máximo absoluto.</p>
+                <p>Como hemos visto, tenemos un imagen binaria, los pixeles o bien son negros o bien son blancos.</p>
+                <p>El histograma horizontal que buscamos es la gráfica del sumatorio de pixeles por columna, realmente es una
+                  función f(x) cuyo dominio va de 0 al número de columnas y cuyo valor en cada punto del dominio f(x0), será
+                  la suma de los pixels para la columna x0.</p>
+                <p>Haremos lo mismo con el histograma vertical, suavizaremos la curva obtenida y obtendremos el valor máximo.</p>
+                <pre class="cscode"><code>
+  
+<span class="key">void</span> SuavizaCurva(vector&lt;<span class="key">int</span>&gt;&amp;suma_negros_columnas);
+vector&lt;<span class="key">int</span>&gt;  DameHistogramaHorizontal(<span class="key">const</span> Mat &amp; gray);
+vector&lt;<span class="key">int</span>&gt;  DameHistogramaVertical(<span class="key">const</span> Mat &amp; gray);
+<span class="key">int</span> DamePosicionDelMaximo(vector&lt;<span class="key">int</span>&gt; suma_negros_columnas);
+<span class="key">int</span> DamePuntoSuperiorMaximo(vector&lt;<span class="key">int</span>&gt; suma_negros_columnas, <span class="key">int</span> umbral);
+<span class="key">int</span> DamePuntoInferiorMaximo(vector&lt;<span class="key">int</span>&gt; suma_negros_columnas, <span class="key">int</span> umbral);
+
+	</code>
+</pre>
+                <p>Podemos mostrar la proyección de pixels que hemos calculado.</p>
+                <pre class="cscode"><code>
+	<span class="com">//Mostramos la proyección de pixels </span>
+    <span class="key">for</span>(<span class="key">int</span> i=0;i&lt;image_gris.cols;i++)
+    { 
+        cv::line(imagen_temporal_color,cv::Point(i,0),cv::Point(i,suma_negros_columnas[i]),Scalar(0,0,255), 3, 8, 0 );
+    }
+	  <span class="key">for</span>(<span class="key">int</span> i=0;i&lt;image_gris.rows;i++)
+    { 
+        cv::line(imagen_temporal_color,cv::Point(0,i),cv::Point(suma_negros_filas[i],i),Scalar(255,0,0), 3, 8, 0 );
+    }
+	
+	</code>
+</pre>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/imagen_temporal_color.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+                <p>Como podemos observar, hay un conjunto de puntos que acompañan al máximo, que destacan sobre el resto de
+                  la gráfica y que pertenecerán al conjunto de puntos buscado.</p>
+                <p>Una vez que hemos detectado la posible zona de ubicación de la pupila, nos queda recortar esta zona aplicar
+                  el agoritmo de detección de bordes de  Canny  http://es.wikipedia.org/wiki/Algoritmo_de_Canny   y mostraremos
+                  los resultados</p>
+                <p>&nbsp;</p>
+                <pre class="cscode"><code>
+ 
+ recorte_color=copia_original(cv::Rect(x_0 -dx   ,y_0-dy , (x_1-x_0 +2*dx) ,(y_1-y_0 +2*dy)  ) ).clone();
+    namedWindow( <span class="str">"recorte_color"</span>,cv::WINDOW_NORMAL );
+    imshow( <span class="str">"recorte_color"</span>, recorte_color ); 
+    Mat recorte_gris;
+            cv::imwrite(<span class="str">"recorte_color.jpg"</span>,recorte_color);
+    cv::cvtColor(recorte_color,recorte_gris, CV_BGR2GRAY);
+     
+    namedWindow( <span class="str">"recorte_gris"</span>,cv::WINDOW_NORMAL );
+    imshow( <span class="str">"recorte_gris"</span>, recorte_gris );  
+    cv::imwrite(<span class="str">"recorte_gris.jpg"</span>,recorte_gris);
+    <span class="com">//Difuminamos la imagen</span>
+    blur( recorte_gris, matriz_deteccion, Size(3,3) );
+    <span class="com">//Aplicamos el algoritmo de detección de bordes de Canny</span>
+    <span class="com">//http://es.wikipedia.org/wiki/Algoritmo_de_Canny</span>
+	
+	
+	
+   Canny( matriz_deteccion, matriz_deteccion, 30, 180, 3 );
+    
+	 <span class="com">//Invertimos los colores</span>
+    bitwise_not(matriz_deteccion,matriz_deteccion);
+    <span class="com">//Aplicamos una erosión </span>
+    cv::erode(matriz_deteccion,matriz_deteccion,Mat());
+
+    namedWindow( <span class="str">"Canny"</span>, WINDOW_NORMAL );
+    imshow( <span class="str">"Canny"</span>, matriz_deteccion );
+    cv::imwrite(<span class="str">"Canny.jpg"</span>,matriz_deteccion);
+     <span class="com">// Mostramos los bordes detectados en el recorte</span>
+    Mat  dst =   Mat(recorte_color.size(),recorte_color.type(),Scalar::all(255));<span class="com">//.clone();</span>
+    recorte_color.copyTo( dst, matriz_deteccion);
+    namedWindow( <span class="str">"detección"</span>, WINDOW_NORMAL );
+    imshow( <span class="str">"detección"</span>, dst );
+   cv::imwrite(<span class="str">"dst.jpg"</span>,dst);
+    <span class="com">//Llenamos el vector de puntos que estabamos buscando</span>
+    <span class="key">for</span>(<span class="key">int</span> i=0;i&lt;matriz_deteccion.cols ;i++)
+    {
+        <span class="key">for</span>(<span class="key">int</span> j=0;j&lt;matriz_deteccion.rows;j++)
+        {
+            <span class="com">//Hay que tener en cuenta que los puntos detectados están en el recorte</span>
+            <span class="com">//Por eso, habrá que sumarles los desplazamientos</span>
+            <span class="key">if</span>(matriz_deteccion.at&lt;uchar&gt;(cv::Point(i,j))==0)
+                vector_puntos.push_back(cv::Point(i+x_0 -dx ,j+y_0-dy ));
+        }
+    } 
+    <span class="com">//Mostramos el resultado</span>
+    <span class="key">for</span>(<span class="key">int</span> i=0;i&lt;vector_puntos.size() ;i++)
+    {
+        cv::circle(copia_original,vector_puntos[i],0.1,cv::Scalar(255,0,0),0.1);
+    } 
+    namedWindow( <span class="str">"resultado"</span>, WINDOW_NORMAL );
+    imshow( <span class="str">"resultado"</span>, copia_original );
+	</code>
+</pre>
+                <p>&nbsp;</p>
+                <p>Por último mostramos el resultado</p>
+                <p><img src="https://i2.wp.com/crearpdf.es.anemone.arvixe.com/wp-content/uploads/2016/11/resultado.jpg?w=848"
+                    alt="" data-recalc-dims="1" /></p>
+              </div>
+              <div class="blogdate"><span id="ctl00_mainContent_ctl00_postList_rptBlogs_ctl00_spnAuthor" class="blogauthor">Publicado por Admin</span>                <span id="ctl00_mainContent_ctl00_postList_rptBlogs_ctl00_spnBottomDate" class="bdate">jueves, 20 de febrero de 2014 14:25:00</span></div>
+              <div class="sharedaddy sd-sharing-enabled">
+                <div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing">
+                  <h3 class="sd-title">Compártelo:</h3>
+                  <div class="sd-content">
+                    <ul>
+                      <li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-4" class="share-twitter sd-button share-icon no-text"
+                          href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/?share=twitter" target="_blank"
+                          title="Haz clic para compartir en Twitter"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Twitter (Se abre en una ventana nueva)</span></a></li>
+                      <li
+                        class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-4" class="share-google-plus-1 sd-button share-icon no-text"
+                          href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/?share=google-plus-1" target="_blank"
+                          title="Haz clic para compartir en Google+"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Google+ (Se abre en una ventana nueva)</span></a></li>
+                        <li
+                          class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-4" class="share-facebook sd-button share-icon no-text"
+                            href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/?share=facebook" target="_blank"
+                            title="Haz clic para compartir en Facebook"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Facebook (Se abre en una ventana nueva)</span></a></li>
+                          <li
+                            class="share-jetpack-whatsapp"><a rel="nofollow" data-shared="" class="share-jetpack-whatsapp sd-button share-icon no-text" href="whatsapp://send/?text=Detecci%C3%B3n%20de%20pupila%20con%20visi%C3%B3n%20artificial%20paso%20a%20paso. http%3A%2F%2Fprogramando.com.es%2F2016%2F12%2F11%2Fdeteccion-de-pupila-con-vision-artificial-paso-a-paso%2F"
+                              target="_blank" title="Haz clic para compartir en WhatsApp"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en WhatsApp (Se abre en una ventana nueva)</span></a></li>
+                            <li
+                              class="share-end"></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div id='jp-relatedposts' class='jp-relatedposts'>
+                <h3 class="jp-relatedposts-headline"><em>Relacionado</em></h3>
+              </div>
+            </div>
+            <div class="single-tags">
+              <a href="/tag/c/" rel="tag">C++</a>, <a href="/tag/opencv/" rel="tag">OpenCV</a>, <a href="/tag/vision-artificial/"
+                rel="tag">Visión Artificial</a> </div>
+            <div class="single-post-navigation">
+
+              <nav class="navigation post-navigation" role="navigation">
+                <h2 class="screen-reader-text">Navegación de entradas</h2>
+                <div class="nav-links">
+                  <div class="nav-next"><a href="/2016/12/11/os-presento-photodream/" rel="next">Os presento PhotoDream</a></div>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </article>
+
+
+        <div id="comments" class="comments-area">
+
+
+
+          <div id="respond" class="comment-respond">
+            <h2 id="reply-title" class="comment-reply-title">Deja un comentario <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/12/11/deteccion-de-pupila-con-vision-artificial-paso-a-paso/#respond" style="display:none;">Cancelar respuesta</a></small></h2>
+            <form action="/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+              <p class="comment-notes"><span id="email-notes">Tu dirección de correo electrónico no será publicada.</span> Los campos obligatorios
+                están marcados con <span class="required">*</span></p>
+              <p class="comment-form-comment"><label for="comment">Comentario</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525"
+                  aria-required="true" required="required"></textarea></p>
+              <p class="comment-form-author"><label for="author">Nombre <span class="required">*</span></label> <input id="author" name="author" type="text"
+                  value="" size="30" maxlength="245" aria-required='true' required='required' /></p>
+              <p class="comment-form-email"><label for="email">Correo electrónico <span class="required">*</span></label> <input id="email" name="email"
+                  type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required='true' required='required'
+                /></p>
+              <p class="comment-form-url"><label for="url">Web</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" /></p>
+              <p class="form-submit"><input name="submit" type="submit" id="submit" class="v12-btn v12-btn-yellow" value="Publicar comentario" />                <input type='hidden' name='comment_post_ID' value='4' id='comment_post_ID' />
+                <input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+              </p>
+              <p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="bba7386ec7" /></p>
+              <p class="comment-subscription-form"><input type="checkbox" name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;"
+                /> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">Recibir un email con los siguientes comentarios a esta entrada.</label></p>
+              <p
+                class="comment-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;"
+                /> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">Recibir un email con cada nueva entrada.</label></p>
+                <p
+                  style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="145" /></p>
+            </form>
+          </div>
+          <!-- #respond -->
+
+        </div>
+        <!-- .comments-area -->
+      </div>
+      <div class="col-md-3">
+      </div>
+    </div>
+  </div>
+  <div class="v12-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">Powered by <a href="http://www.wordpress.org/">WordPress</a> and <a href="http://v12theme.com/">V12 Theme</a></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:none">
+  </div>
+
+  <script type="text/javascript">
+    window.WPCOM_sharing_counts = { "http:\/\/programando.com.es\/2016\/12\/11\/deteccion-de-pupila-con-vision-artificial-paso-a-paso\/": 4 };
+  </script>
+  <script type='text/javascript' src='/wp-content/plugins/akismet/_inc/form.js?ver=3.2'></script>
+  <script type='text/javascript' src='/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+  <script type='text/javascript'>
+    /* <![CDATA[ */
+    var code_prettify_settings = { "base_url": "http:\/\/programando.com.es\/wp-content\/plugins\/code-prettify\/prettify" };
+/* ]]> */
+
+  </script>
+  <script type='text/javascript' src='/wp-content/plugins/code-prettify/prettify/run_prettify.js?ver=1.3.4'></script>
+  <script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201740'></script>
+  <script type='text/javascript' src='/wp-content/themes/v12/lib/bootstrap/js/bootstrap.min.js?ver=1.1.0'></script>
+  <script type='text/javascript' src='/wp-includes/js/wp-embed.min.js?ver=4.7.6'></script>
+  <script type='text/javascript' src='/wp-includes/js/comment-reply.min.js?ver=4.7.6'></script>
+  <script type='text/javascript'>
+    /* <![CDATA[ */
+    var sharing_js_options = { "lang": "en", "counts": "1" };
+/* ]]> */
+
+  </script>
+  <script type='text/javascript' src='/wp-content/plugins/jetpack/modules/sharedaddy/sharing.js?ver=4.4.2'></script>
+  <script type='text/javascript'>
+    var windowOpen;
+    jQuery(document.body).on('click', 'a.share-twitter', function () {
+      // If there's another sharing window open, close it.
+      if ('undefined' !== typeof windowOpen) {
+        windowOpen.close();
+      }
+      windowOpen = window.open(jQuery(this).attr('href'), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350');
+      return false;
+    });
+    var windowOpen;
+    jQuery(document.body).on('click', 'a.share-google-plus-1', function () {
+      // If there's another sharing window open, close it.
+      if ('undefined' !== typeof windowOpen) {
+        windowOpen.close();
+      }
+      windowOpen = window.open(jQuery(this).attr('href'), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550');
+      return false;
+    });
+    var windowOpen;
+    jQuery(document.body).on('click', 'a.share-facebook', function () {
+      // If there's another sharing window open, close it.
+      if ('undefined' !== typeof windowOpen) {
+        windowOpen.close();
+      }
+      windowOpen = window.open(jQuery(this).attr('href'), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400');
+      return false;
+    });
+
+  </script>
+  <script type='text/javascript' src='http://stats.wp.com/e-201740.js' async defer></script>
+  <script type='text/javascript'>
+      _stq = window._stq || [];
+      _stq.push(['view', { v: 'ext', j: '1:4.4.2', blog: '121132704', post: '4', tz: '1', srv: 'programando.com.es' }]);
+      _stq.push(['clickTrackerInit', '121132704', '4']);
+
+  </script>
+</body>
+
+</html>
+
+<!-- Dynamic page generated in 0.366 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-10-07 17:53:28 -->
+
+<!-- super cache -->

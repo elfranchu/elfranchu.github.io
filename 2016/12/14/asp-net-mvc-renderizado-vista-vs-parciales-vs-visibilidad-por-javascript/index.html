@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="pingback" href="/xmlrpc.php"/>
+    <title>ASP.NET MVC renderizado vista vs parciales vs visibilidad por javascript &#8211; Programando</title>
+<!-- Jetpack Site Verification Tags -->
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Programando &raquo; Feed" href="/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Programando &raquo; RSS de los comentarios" href="/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Programando &raquo; ASP.NET MVC renderizado vista vs parciales vs visibilidad por javascript RSS de los comentarios" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/programando.com.es\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.6"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='v12_google_font-css'  href='https://fonts.googleapis.com/css?family=Raleway%3A400%2C700&#038;ver=1.1.0' type='text/css' media='screen' />
+<link rel='stylesheet' id='bootstrap-css'  href='/wp-content/themes/v12/lib/bootstrap/css/bootstrap.min.css?ver=1.1.0' type='text/css' media='screen' />
+<link rel='stylesheet' id='v12_style-css'  href='/wp-content/themes/v12/style.css?ver=1.1.0' type='text/css' media='screen' />
+<link rel='stylesheet' id='v12_style_single-css'  href='/wp-content/themes/v12/css/single.css?ver=1.1.0' type='text/css' media='screen' />
+<link rel='stylesheet' id='v12_style_page-css'  href='/wp-content/themes/v12/css/page.css?ver=1.1.0' type='text/css' media='screen' />
+<link rel='stylesheet' id='social-logos-css'  href='/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='/wp-content/plugins/jetpack/css/jetpack.css?ver=4.4.2' type='text/css' media='all' />
+<script type='text/javascript' src='/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-content/plugins/jetpack/modules/related-posts/related-posts.js?ver=20150408'></script>
+<!--[if lt IE 9]>
+<script type='text/javascript' src='http://programando.com.es/wp-content/themes/v12/lib/html5shiv/html5shiv.min.js?ver=1.1.0'></script>
+<![endif]-->
+<!--[if lt IE 9]>
+<script type='text/javascript' src='http://programando.com.es/wp-content/themes/v12/lib/respond/respond.min.js?ver=1.1.0'></script>
+<![endif]-->
+<link rel='https://api.w.org/' href='/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Estrella de navidad con html5' href='/2016/12/11/estrella-de-navidad-con-html5/' />
+<meta name="generator" content="WordPress 4.7.6" />
+<link rel="canonical" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/" />
+<link rel='shortlink' href='http://wp.me/p8cg9i-4l' />
+<link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=http%3A%2F%2F%2F2016%2F12%2F14%2Fasp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript%2F" />
+<link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=http%3A%2F%2F%2F2016%2F12%2F14%2Fasp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript%2F&#038;format=xml" />
+ <link rel='dns-prefetch' href='//v0.wordpress.com'>
+<link rel='dns-prefetch' href='//i0.wp.com'>
+<link rel='dns-prefetch' href='//i1.wp.com'>
+<link rel='dns-prefetch' href='//i2.wp.com'>
+<style type='text/css'>img#wpstats{display:none}</style>		<style type="text/css">
+.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}.sharedaddy{
+    display: none;
+    
+  }
+  .comments-area{
+    display: none;
+    
+  }
+</style>
+		<meta name="title" content="ASP.NET MVC renderizado vista vs parciales vs visibilidad por javascript | Programando" />
+<meta name="description" content="En este artículo, vamos a hacer una comparativa del “renderizado” o “pintado” de una vista en ASP.NET MVC de tres formas distintas. La primera es la más básica petición de la vista al controlador. En una segunda parte veremos cómo dividir la vista en vistas parciales. Como tercer punto solicitaremos sólo la parte que necesitamos&hellip;" />
+
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="ASP.NET MVC renderizado vista vs parciales vs visibilidad por javascript" />
+<meta property="og:url" content="http://programando.com.es/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/" />
+<meta property="og:description" content="En este artículo, vamos a hacer una comparativa del “renderizado” o “pintado” de una vista en ASP.NET MVC de tres formas distintas. La primera es la más básica petición de la vista al controlador. …" />
+<meta property="article:published_time" content="2016-12-14T16:45:57+00:00" />
+<meta property="article:modified_time" content="2016-12-14T17:10:52+00:00" />
+<meta property="og:site_name" content="Programando" />
+<meta property="og:image" content="http://programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas-300x169.jpg" />
+<meta property="og:locale" content="es_ES" />
+<meta name="twitter:card" content="summary" />
+<meta data-pso-pv="1.2.1" data-pso-pt="singlePost" data-pso-th="8376f4359ecbb1804b60d7542fd3d17a">
+ </head>
+  <body class="post-template-default single single-post postid-269 single-format-standard">
+    <nav class="navbar navbar-default v12-header">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+                            <div class='site-logo'>
+                                      <a class="navbar-brand" href="/" title='Programando' rel='home'>Programando</a>
+                                  </div>
+                    </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+<div class="container" id="v12-main">
+  <div class="row">
+<div class="col-md-9">
+    <article class="post-269 post type-post status-publish format-standard hentry category-web tag-asp-net-mvc tag-javascript tag-jquery tag-mvc" id="post-269">
+  	  <div class="featured-image">
+	    	  </div>
+	  <div class="wrapper clearfix">
+	    <p class="meta">
+	      <span>14 diciembre, 2016</span> /
+	      <span>by <a href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/fjmenendez">fjmenendez</a></span> /
+	      <span><a href="/category/web/" rel="category tag">Web</a></span> /
+	      <span>No Comments</span>
+	    </p>
+	    	      <h1 class="title">ASP.NET MVC renderizado vista vs parciales vs visibilidad por javascript</h1>
+	      	    <div class="content">
+	      <p>En este artículo, vamos a hacer una comparativa del “<strong><em>renderizado</em></strong>” o “pintado” de una vista en <strong>ASP.NET MVC</strong> de tres formas distintas.</p>
+<ol>
+<li>La primera es la más <strong>básica</strong> petición de la vista al controlador.</li>
+<li>En una segunda parte veremos cómo dividir la vista en <strong>vistas parciales</strong>.</li>
+<li>Como tercer punto solicitaremos <strong>sólo la parte que necesitamos actualizar</strong> mediante el uso de vistas parciales.</li>
+<li>Y por último, en vez de refrescar la información, pasaremos a obtenerla en la primera petición del “html” y <strong>“jugaremos” con la visibilidad</strong>.</li>
+</ol>
+<p>Como ejemplo intentaremos mostrar tres páginas:</p>
+<ul>
+<li>Inicio</li>
+<li>Información</li>
+<li>Contacto.</li>
+</ul>
+<p>Podéis <a href="https://github.com/elfranchu/Carga-Vistas-Parciales">descargar </a>el código en GitHub.</p>
+<p><a href="https://github.com/elfranchu/Carga-Vistas-Parciales">https://github.com/elfranchu/Carga-Vistas-Parciales</a></p>
+<p>Para comenzar, vamos a crear un  nuevo proyecto de ASP.Net MVC</p>
+<p><a href="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png"><img class="alignnone size-medium wp-image-275" src="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?resize=300%2C169" alt="" srcset="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?resize=300%2C169 300w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?resize=768%2C432 768w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?resize=1024%2C576 1024w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?resize=848%2C477 848w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto1.png?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<p>&nbsp;</p>
+<p>Elegimos como plantilla uno que este vacío, para no tener demasiadas distracciones.</p>
+<p><u><a href="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png"><img class="alignnone size-medium wp-image-276" src="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?resize=300%2C169" alt="" srcset="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?resize=300%2C169 300w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?resize=768%2C432 768w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?resize=1024%2C576 1024w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?resize=848%2C477 848w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/crear-proyecto-2.png?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></u></p>
+<p><strong>Modelos</strong></p>
+<p>&nbsp;</p>
+<p>Crearemos los modelos que utiliza el controlador anterior</p>
+<p><a href="https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png"><img class="alignnone size-medium wp-image-273" src="https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?resize=300%2C169" alt="" srcset="https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?resize=300%2C169 300w, https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?resize=768%2C432 768w, https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?resize=1024%2C576 1024w, https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?resize=848%2C477 848w, https://i0.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-modelo.png?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<p>&nbsp;</p>
+<p>En primer lugar un modelo para el contenido de la página</p>
+<pre>public class PageContent
+{
+   public string Title { get; set; }
+   
+   public string Description { get; set; }
+}</pre>
+<p>&nbsp;</p>
+<p>Así el PageContent, será distinto para cada página.</p>
+<p>Crearemos una enumeración que identifique cada página</p>
+<pre>public enum EnumViewMode
+{
+   Index,
+   Info,
+   Contact
+}</pre>
+<p>&nbsp;</p>
+<p>Agregaremos un modelo que englobe la información anterior junto con los <strong>elementos comunes</strong> a todas las páginas, que podrían ser la “Cabecera” y el “Pie de página”.</p>
+<pre>public class MyModel
+{
+  public string Header { get; set; }
+  
+  public PageContent MainContent { get; set; }
+  public string Footer { get; set; }
+
+  public EnumViewMode ViewMode { get; set; }
+}</pre>
+<p>Y un modelo avanzado para el último caso</p>
+<pre>public class MyModelAllInOne
+{
+  public string Header { get; set; }
+  public PageContent IndexMainContent { get; set; }
+  public PageContent InfoMainContent { get; set; }
+  public PageContent ContactMainContent { get; set; }
+  public string Footer { get; set; }
+  public EnumViewMode ViewMode { get; set; }
+}</pre>
+<p>En el que podríamos decir que viajaría toda la información de estas tres páginas.<br />
+Agregamos una carpeta “Home” en la carpeta Views y en ella una vista “Index.cshtml”</p>
+<p><a href="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png"><img class="alignnone size-medium wp-image-274" src="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?resize=300%2C169" alt="" srcset="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?resize=300%2C169 300w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?resize=768%2C432 768w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?resize=1024%2C576 1024w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?resize=848%2C477 848w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-vista.png?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<p>Como ya sabréis, esta vista  se alimentará de un controlador  HomeController, lo creamos.</p>
+<p><a href="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png"><img class="alignnone size-medium wp-image-272" src="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?resize=300%2C169" alt="" srcset="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?resize=300%2C169 300w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?resize=768%2C432 768w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?resize=1024%2C576 1024w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?resize=848%2C477 848w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/agregar-controlador.png?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<pre>public class HomeController : Controller
+{
+   // GET: /Home/
+   public ActionResult Index()
+  {  
+  }
+}
+</pre>
+<p>&nbsp;</p>
+<p>La estructura de vistas y controladores debería quedar así:</p>
+<p><a href="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg"><img class="alignnone size-medium wp-image-277" src="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?resize=300%2C169" alt="" srcset="https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?resize=300%2C169 300w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?resize=768%2C432 768w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?resize=1024%2C576 1024w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?resize=848%2C477 848w, https://i1.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-controladores.jpg?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<p>&nbsp;</p>
+<p>Y la estructura de vistas tal que así</p>
+<p><a href="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg"><img class="alignnone size-medium wp-image-278" src="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?resize=300%2C169" alt="" srcset="https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?resize=300%2C169 300w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?resize=768%2C432 768w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?resize=1024%2C576 1024w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?resize=848%2C477 848w, https://i2.wp.com/programando.com.es/wp-content/uploads/2016/12/estructura-de-vistas.jpg?w=1366 1366w" sizes="(max-width: 300px) 100vw, 300px" data-recalc-dims="1" /></a></p>
+<h2><strong>1.- Petición de la vista al controlador.</strong></h2>
+<p>Para esta parte, usaremos el controlador home, para simplemente atender las peticiones de vista.</p>
+<p>Recordemos que queremos el contenido de 3 vistas, Inicio, Información y Contacto, en el controlador<strong> devolvemos un modelo lleno para cada vista</strong></p>
+<pre>public class HomeController : Controller
+ {
+ //
+ // GET: /Home/
+
+ public ActionResult Index()
+ {
+ MyModel m = new MyModel();
+ m.Header = string.Format("Parte de Cabecera Actualizada:{0}", DateTime.Now);
+ m.Footer = string.Format("Parte de Pie de Página Actualizada:{0}", DateTime.Now);
+
+ m.MainContent = new PageContent();
+ m.MainContent.Title = "Página de Inicio";
+ m.MainContent.Description = "Esta es la descripción de la página de Inicio:Lorem . . . .. . .";
+ return View(m);
+ }
+
+ public ActionResult Info()
+ {
+ MyModel m = new MyModel();
+ m.Header = string.Format("Parte de Cabecera Actualizada:{0}", DateTime.Now);
+ m.Footer = string.Format("Parte de Pie de Página Actualizada:{0}", DateTime.Now);
+
+ m.MainContent = new PageContent();
+ m.MainContent.Title = "Página de Información";
+ m.MainContent.Description = "Esta es la descripción de la página de Información:Lorem ipsum. . . .. . .";
+ return View(m);
+ }
+
+ public ActionResult Contact()
+ {
+ MyModel m = new MyModel();
+ m.Header = string.Format("Parte de Cabecera Actualizada:{0}", DateTime.Now);
+ m.Footer = string.Format("Parte de Pie de Página Actualizada:{0}", DateTime.Now);
+
+ m.MainContent = new PageContent();
+ m.MainContent.Title = "Página de Contacto";
+ m.MainContent.Description = "Esta es la descripción de la página de Contacto:Lorem ipsum dol. . . .. . .";
+
+ return View(m);
+ }
+ 
+ }</pre>
+<p>&nbsp;</p>
+<p>Y en la vista, construimos el html, a partir del modelo devuelto por el controlador con sintaxis <strong>razor</strong>.</p>
+<pre>@model DynamicPartialLoad.Models.MyModel
+@{
+ ViewBag.Title = "Index";
+}
+@Html.Partial("_menu")
+&lt;h2&gt;@Model.Header&lt;/h2&gt;
+&lt;h2&gt;Pagina de inicio&lt;/h2&gt;
+&lt;div&gt;
+ &lt;p&gt;Estos datos vienen del controlador, a través del modelo:&lt;/p&gt;
+ &lt;h2&gt;Title: @Model.MainContent.Title&lt;/h2&gt;
+ &lt;p&gt;Description: @Model.MainContent.Description&lt;/p&gt;
+&lt;/div&gt;
+</pre>
+<h2>2<strong>.-</strong> Dividir la vista en parciales.</h2>
+<p>Vemos que las peticiones de las tres vistas tienen en común la cabecera y el pie de página, o lo que es lo mismo, discrepan en la parte central.<br />
+Pues bien crearemos una vista parcial para cada vista anterior y <em>transformaremos</em> la vista para que “pinte” estas parciales</p>
+<pre>&lt;div id="contenidocentral"&gt;
+
+ @if (Model.ViewMode == EnumViewMode.Index)
+ {
+ @Html.Partial("_partialIndex", Model.MainContent)
+ }
+ else if (Model.ViewMode == EnumViewMode.Contact)
+ {
+ @Html.Partial("_partialContact", Model.MainContent)
+ }
+ else if (Model.ViewMode == EnumViewMode.Info)
+ {
+ @Html.Partial("__partialInfo", Model.MainContent)
+ }
+ &lt;/div&gt;</pre>
+<p>El controlador devuelve en el modelo el contenido de la vista parcial</p>
+<pre>public class UsarParcialesController : Controller
+{
+public ActionResult Index(string id)
+{
+MyModel m = new MyModel();
+m.Header = string.Format("Parte de Cabecera Actualizada:{0}", DateTime.Now);
+m.Footer = string.Format("Parte de Pie de Página Actualizada:{0}", DateTime.Now);
+if (id == "Info")
+{
+  m.MainContent = new PageContent()
+ {
+  Title = "Página de Información",
+  Description = "Esta es la descripción de la página de VER CÓDIGO COMPLETO EN GitHub"
+ };
+}
+
+/*Ver código completo*/
+
+return View(m);
+
+}</pre>
+<p>&nbsp;</p>
+<h2>3.-Cargar sólo la parte a actualizar</h2>
+<p>Además de que el controlador devuelva en el modelo el contenido de la vista parcial, hay ocasiones en las que no sería necesario pedir toda la página sino que se puede realizar una petición de página parcial.</p>
+<p>Por ejemplo, si estamos en la página de “información” y queremos ver la página de “contacto”, y dado que estas comparten la cabecera y el pie de página, <strong>lo único que necesitamos actualizar es el contenido central.</strong></p>
+<p>Así, siguiendo con el ejemplo anterior, nos encontramos en la página de “información”, y tenemos un link que nos lleva a la página de “contacto”</p>
+<pre>&lt;div&gt;
+   &lt;a class="contactlink" href="/CargarParciales/CenterAsPartial/Contact"&gt;Contacto&lt;/a&gt;
+&lt;/div&gt;</pre>
+<p>&nbsp;</p>
+<p>Con <strong>JQuery</strong>, capturamos el evento click de este link</p>
+<pre>$(".contactlink").click(function (e) {
+
+// se ha producido un click en el link
+
+e.preventDefault();
+
+});
+</pre>
+<p>Y cargamos  la vista parcial en la parte central en concreto en la capa cuyo id es “contenidocentral”.</p>
+<pre>$(document).ready(function () {
+
+function LoadPartial(obj) {
+
+//Cargar la url de la parcial
+
+var url = $(obj).attr('href')
+
+console.debug(url);
+
+$("#contenidocentral").load(url);
+
+}
+
+ 
+
+$(".contactlink").click(function (e) {
+
+LoadPartial(this);
+
+e.preventDefault();
+
+});
+</pre>
+<p>Al ejecutar la función load, se hace una petición al controlador que no devuelve el html de la  página, sino la parte de la parcial, con este html se reemplaza el contenido de la capa “contenidocentral” .</p>
+<pre>public ActionResult CenterAsPartial(string id)
+{
+PageContent m = new PageContent();
+if (id == "Contact")
+{
+m = new PageContent();
+{
+Title = "Página de Contacto",
+Description = "Esta es la descripción de la página de Contacto:………….."
+};
+
+return PartialView("_partialContact", m);
+
+}
+
+}
+
+</pre>
+<p>&nbsp;</p>
+<h2>4.- Obtención en una simple petición</h2>
+<p>Por último, en vez de refrescar la información, pasaremos a <strong>obtenerla en la primera petición del “html”</strong> y “jugaremos” con la visibilidad. Esta forma aunque no muy ortodoxa tiene claras ventajas para páginas pequeñas, normalmente alojadas en servidores compartidos y donde una cada petición tarda bastante.</p>
+<p>Con una sola petición se podría tener todo el html, eso sí sería más grande.</p>
+<p>Necesitamos un nuevo modelo para desarrollar esta parte</p>
+<pre>public class MyModelAllInOne
+{
+public string Header { get; set; }
+
+public PageContent IndexMainContent { get; set; }
+
+public PageContent InfoMainContent { get; set; }
+
+public PageContent ContactMainContent { get; set; }
+
+public string Footer { get; set; }
+
+public EnumViewMode ViewMode { get; set; }
+
+}
+</pre>
+<p>Como hemos dicho, en una sola petición debe ir nuestro sitio completo, por eso este modelo lleva una “cabecera” y un “pie”, que son comunes a todas las páginas y tres contenidos “Inicio”, “Información” y “Contacto”.</p>
+<p>&nbsp;</p>
+<p>Nuestro código para la vista sería:</p>
+<pre>@Html.Partial("_menu")
+
+&lt;h2&gt;@Model.Header&lt;/h2&gt;
+
+&lt;div id="indexdiv"&gt;
+
+ 
+
+&lt;h2&gt;Pagina de Inicio con parcial&lt;/h2&gt;
+
+&lt;div&gt;
+
+&lt;span&gt;Contenido Actualizado: @DateTime.Now.ToString()&lt;/span&gt;
+
+&lt;br&gt;
+
+&lt;p&gt;Estos datos vienen del controlador, a través del modelo:&lt;/p&gt;
+
+&lt;h2&gt;Title: @Model.IndexMainContent.Title&lt;/h2&gt;
+
+&lt;p&gt;Description: @Model.IndexMainContent.Description&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div id="infodiv"&gt;
+
+ 
+
+&lt;h2&gt;Pagina de Información con parcial&lt;/h2&gt;
+
+&lt;div&gt;
+
+&lt;span&gt;Contenido Actualizado: @DateTime.Now.ToString()&lt;/span&gt;
+
+&lt;br&gt;
+
+&lt;p&gt;Estos datos vienen del controlador, a través del modelo:&lt;/p&gt;
+
+&lt;h2&gt;Title: @Model.InfoMainContent.Title&lt;/h2&gt;
+
+&lt;p&gt;Description: @Model.InfoMainContent.Description&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div id="contactdiv"&gt;
+
+ 
+
+&lt;h2&gt;Pagina de Contacto con parcial&lt;/h2&gt;
+
+&lt;div&gt;
+
+&lt;span&gt;Contenido Actualizado: @DateTime.Now.ToString()&lt;/span&gt;
+
+&lt;br&gt;
+
+&lt;p&gt;Estos datos vienen del controlador, a través del modelo:&lt;/p&gt;
+
+&lt;h2&gt;Title: @Model.ContactMainContent.Title&lt;/h2&gt;
+
+&lt;p&gt;Description: @Model.ContactMainContent.Description&lt;/p&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+ 
+
+&lt;h2&gt;@Model.Footer&lt;/h2&gt;
+
+ 
+</pre>
+<p>A destacar tres capas en donde irán pintadas cada parcial “indexdiv”, &#8220;infodiv&#8221; y</p>
+<p>&#8220;contactdiv&#8221;.</p>
+<p>Como sólo queremos que se vea una, modificaremos su visibilidad dinámicamente con JQuery® en función de la url.</p>
+<p>&nbsp;</p>
+<pre>if (window.location.href.endsWith("AllInOne/Index") == false)
+
+$("#indexdiv").hide();
+
+if (window.location.href.endsWith("AllInOne/Info") == false)
+
+$("#infodiv").hide();
+
+if (window.location.href.endsWith("AllInOne/Contact") == false)
+
+$("#contactdiv").hide();
+</pre>
+<p>&nbsp;</p>
+<p>Como en  el ejemplo anterior, estamos en la página de “información” y queremos ver la página de “contacto”</p>
+<pre>&lt;div&gt;
+
+&lt;a class="contactlinkjquery" href="/AllInOne/Contact"&gt;Contacto&lt;/a&gt;    &lt;/div&gt;
+</pre>
+<p>Con JQuery, capturamos el evento click de este link, y modificamos la visibilidad de las capas, dependiendo de los parámetros de la url.</p>
+<p>Modificamos además el historial de Html5, para permitir el refresco de página</p>
+<pre>$(".contactlinkjquery").click(function (e) {
+
+ShowPartial(this);
+
+e.preventDefault();
+
+});
+
+
+
+
+function ShowPartial(obj) {
+
+var url = $(obj).attr('href')
+
+// Ocultamos todas las capas
+
+$("#indexdiv").hide();
+
+$("#infodiv").hide();
+
+$("#contactdiv").hide();
+
+
+
+
+if (url.indexOf('/Index') &gt; 0) {
+
+$("#indexdiv").show();
+
+history.pushState(null, "Inicio", "Index");
+
+}
+
+if (url.indexOf('/Contact') &gt; 0) {
+
+$("#contactdiv").show();
+
+history.pushState(null, "Contacto", "Contact");
+
+}
+
+if (url.indexOf('/Info') &gt; 0) {
+
+$("#infodiv").show();
+
+history.pushState(null, "Info", "Info");
+
+}
+
+}</pre>
+<p>&nbsp;</p>
+<p>Bueno, menuda parrafada.</p>
+<p>Espero haberos introducido múltiples dudas sobre el mundo de las parciales, y que comentéis</p>
+<p>Gracias</p>
+<p><em>&#8220;El ignorante afirma; el sabio duda y reflexiona.&#8221;,  <a href="https://es.wikiquote.org/wiki/Arist%C3%B3teles">Aristóteles</a></em></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class="sd-title">Compártelo:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-269" class="share-twitter sd-button share-icon no-text" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/?share=twitter" target="_blank" title="Haz clic para compartir en Twitter"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Twitter (Se abre en una ventana nueva)</span></a></li><li class="share-google-plus-1"><a rel="nofollow" data-shared="sharing-google-269" class="share-google-plus-1 sd-button share-icon no-text" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/?share=google-plus-1" target="_blank" title="Haz clic para compartir en Google+"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Google+ (Se abre en una ventana nueva)</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-269" class="share-facebook sd-button share-icon no-text" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/?share=facebook" target="_blank" title="Haz clic para compartir en Facebook"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en Facebook (Se abre en una ventana nueva)</span></a></li><li class="share-jetpack-whatsapp"><a rel="nofollow" data-shared="" class="share-jetpack-whatsapp sd-button share-icon no-text" href="whatsapp://send/?text=ASP.NET%20MVC%20renderizado%20vista%20vs%20parciales%20vs%20visibilidad%20por%20javascript http%3A%2F%2Fprogramando.com.es%2F2016%2F12%2F14%2Fasp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript%2F" target="_blank" title="Haz clic para compartir en WhatsApp"><span></span><span class="sharing-screen-reader-text">Haz clic para compartir en WhatsApp (Se abre en una ventana nueva)</span></a></li><li class="share-end"></li></ul></div></div></div>
+<div id='jp-relatedposts' class='jp-relatedposts' >
+	<h3 class="jp-relatedposts-headline"><em>Relacionado</em></h3>
+</div>	    </div>
+	  <div class="single-tags">
+	  	 <a href="/tag/asp-net-mvc/" rel="tag">ASP.NET MVC</a>, <a href="/tag/javascript/" rel="tag">Javascript</a>, <a href="/tag/jquery/" rel="tag">JQuery</a>, <a href="/tag/mvc/" rel="tag">MVC</a>	  </div>
+    <div class="single-post-navigation">
+      
+	<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Navegación de entradas</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="/2016/12/11/estrella-de-navidad-con-html5/" rel="prev">Estrella de navidad con html5</a></div></div>
+	</nav>    </div>
+	  </div>
+	</article>
+	
+
+<div id="comments" class="comments-area">
+
+	
+	
+		<div id="respond" class="comment-respond">
+		<h2 id="reply-title" class="comment-reply-title">Deja un comentario <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2016/12/14/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript/#respond" style="display:none;">Cancelar respuesta</a></small></h2>			<form action="/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-notes"><span id="email-notes">Tu dirección de correo electrónico no será publicada.</span> Los campos obligatorios están marcados con <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Comentario</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">Nombre <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" aria-required='true' required='required' /></p>
+<p class="comment-form-email"><label for="email">Correo electrónico <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required='true' required='required' /></p>
+<p class="comment-form-url"><label for="url">Web</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" /></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="v12-btn v12-btn-yellow" value="Publicar comentario" /> <input type='hidden' name='comment_post_ID' value='269' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="2626ed6298" /></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">Recibir un email con los siguientes comentarios a esta entrada.</label></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">Recibir un email con cada nueva entrada.</label></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="225"/></p>			</form>
+			</div><!-- #respond -->
+	
+</div><!-- .comments-area -->
+  </div>
+<div class="col-md-3">
+  </div></div>
+</div>
+    <div class="v12-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">Powered by <a href="http://www.wordpress.org/">WordPress</a> and <a href="http://v12theme.com/">V12 Theme</a></div>
+        </div>
+      </div>
+    </div>
+    	<div style="display:none">
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"http:\/\/programando.com.es\/2016\/12\/14\/asp-net-mvc-renderizado-vista-vs-parciales-vs-visibilidad-por-javascript\/":269};
+	</script>
+<script type='text/javascript' src='/wp-content/plugins/akismet/_inc/form.js?ver=3.2'></script>
+<script type='text/javascript' src='/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var code_prettify_settings = {"base_url":"http:\/\/programando.com.es\/wp-content\/plugins\/code-prettify\/prettify"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-content/plugins/code-prettify/prettify/run_prettify.js?ver=1.3.4'></script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201740'></script>
+<script type='text/javascript' src='/wp-content/themes/v12/lib/bootstrap/js/bootstrap.min.js?ver=1.1.0'></script>
+<script type='text/javascript' src='/wp-includes/js/wp-embed.min.js?ver=4.7.6'></script>
+<script type='text/javascript' src='/wp-includes/js/comment-reply.min.js?ver=4.7.6'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-content/plugins/jetpack/modules/sharedaddy/sharing.js?ver=4.4.2'></script>
+<script type='text/javascript'>
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-google-plus-1', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+</script>
+<script type='text/javascript' src='http://stats.wp.com/e-201740.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:4.4.2',blog:'121132704',post:'269',tz:'1',srv:'programando.com.es'} ]);
+	_stq.push([ 'clickTrackerInit', '121132704', '269' ]);
+</script>
+  </body>
+</html>
+
+<!-- Dynamic page generated in 0.355 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-10-07 17:36:25 -->
+
+<!-- super cache -->
